@@ -21,5 +21,12 @@ extern "C" {
 
 #include "parson.h"
 
-bool api_get_device_connection(char *device_id);
+typedef struct DEVICE_CONNECTION_TAG {
+  char url[256];
+  char device_id[30];
+} DeviceConnection;
+
+esp_err_t api_set_device_connection_device_id(char *device_id);
+esp_err_t api_set_device_connection_url(char *url);
+bool api_get_device_connection(void);
 #endif /* API_H */

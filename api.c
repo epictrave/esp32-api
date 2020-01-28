@@ -8,7 +8,9 @@ extern const char ca_pem_start[] asm("_binary_ca_pem_start");
 extern const char ca_pem_end[] asm("_binary_ca_pem_end");
 
 static const char *TAG = "API";
-const char buffer[10240];
+static const char buffer[10240];
+static DeviceConnection device_connection;
+
 esp_err_t _http_event_handler(esp_http_client_event_t *evt) {
   switch (evt->event_id) {
   case HTTP_EVENT_ERROR:
@@ -40,16 +42,42 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt) {
   }
   return ESP_OK;
 }
-bool api_get_device_connection(char *device_id) {
+
+esp_err_t api_set_device_connection_device_id(char *device_id) {
+  if (device_id == NULL) {
+    ESP_LOGE(TAG, "Device connection device id can not be null.");
+    return ESP_ERR_INVALID_ARG;
+  }
+  memset(device_connection.device_id, 0, sizeof(device_connection.device_id));
+  strncpy(device_connection.device_id, device_id, strlen(device_id));
+  ESP_LOGI(TAG, "Device connection device id : %s.",
+           device_connection.device_id);
+  return ESP_OK;
+}
+esp_err_t api_set_device_connection_url(char *url) {
+  if (url == NULL) {
+    ESP_LOGE(TAG, "Device connection url can not be null.");
+    return ESP_ERR_INVALID_ARG;
+  }
+  memset(device_connection.url, 0, sizeof(device_connection.url));
+  strncpy(device_connection.url, url, strlen(url));
+  ESP_LOGI(TAG, "Device connection url : %s.", device_connection.url);
+  return ESP_OK;
+}
+
+bool api_get_device_connection(void) {
   memset(buffer, 0, sizeof(buffer));
 
-  if (device_id == NULL)
+  if (device_connection.url == NULL || device_connection.device_id == NULL)
     return false;
 
   bool connection = false;
-  char url[256] = "https://fn-iothub-centralkr-ig-dev01.azurewebsites.net/api/"
-                  "CheckConnection?deviceId=";
-  strncat(url, device_id, strlen(device_id));
+  char url[300];
+  memset(url, 0, sizeof(url));
+  strncat(url, device_connection.url, strlen(device_connection.url));
+  strncat(url, "?deviceId=", strlen("?deviceId="));
+  strncat(url, device_connection.device_id,
+          strlen(device_connection.device_id));
 
   esp_http_client_config_t config = {
       .url = url,
