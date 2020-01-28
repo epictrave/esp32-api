@@ -1,0 +1,10 @@
+set(COMPONENT_SRCDIRS "."
+"deps/parson"
+)
+
+set(COMPONENT_ADD_INCLUDEDIRS "." 
+"deps/parson"
+)
+set(COMPONENT_EMBED_TXTFILES deps/global-root-ca/ca.pem)
+
+register_component()
