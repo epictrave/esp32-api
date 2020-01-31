@@ -8,7 +8,7 @@ extern const char ca_pem_start[] asm("_binary_ca_pem_start");
 extern const char ca_pem_end[] asm("_binary_ca_pem_end");
 
 static const char *TAG = "API";
-static const char buffer[10240];
+static char buffer[10240];
 static DeviceConnection device_connection;
 
 esp_err_t _http_event_handler(esp_http_client_event_t *evt) {
