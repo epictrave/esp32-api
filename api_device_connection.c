@@ -2,16 +2,16 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full
 // license information.
 
-#include "api.h"
+#include "api_device_connection.h"
 
 extern const char ca_pem_start[] asm("_binary_ca_pem_start");
 extern const char ca_pem_end[] asm("_binary_ca_pem_end");
 
-static const char *TAG = "API";
+static const char *TAG = "api device connection";
 static char buffer[10240];
 static DeviceConnection device_connection;
 
-esp_err_t _http_event_handler(esp_http_client_event_t *evt) {
+esp_err_t http_event_handler(esp_http_client_event_t *evt) {
   switch (evt->event_id) {
   case HTTP_EVENT_ERROR:
     ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
@@ -43,7 +43,7 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt) {
   return ESP_OK;
 }
 
-esp_err_t api_set_device_connection_device_id(char *device_id) {
+esp_err_t api_device_connection_set_device_id(char *device_id) {
   if (device_id == NULL) {
     ESP_LOGE(TAG, "Device connection device id can not be null.");
     return ESP_ERR_INVALID_ARG;
@@ -54,7 +54,7 @@ esp_err_t api_set_device_connection_device_id(char *device_id) {
            device_connection.device_id);
   return ESP_OK;
 }
-esp_err_t api_set_device_connection_url(char *url) {
+esp_err_t api_device_connection_set_url(char *url) {
   if (url == NULL) {
     ESP_LOGE(TAG, "Device connection url can not be null.");
     return ESP_ERR_INVALID_ARG;
@@ -65,7 +65,7 @@ esp_err_t api_set_device_connection_url(char *url) {
   return ESP_OK;
 }
 
-bool api_get_device_connection(void) {
+bool api_device_connection_get_connection(void) {
   memset(buffer, 0, sizeof(buffer));
 
   if (device_connection.url == NULL || device_connection.device_id == NULL)
@@ -81,7 +81,7 @@ bool api_get_device_connection(void) {
 
   esp_http_client_config_t config = {
       .url = url,
-      .event_handler = _http_event_handler,
+      .event_handler = http_event_handler,
       .cert_pem = ca_pem_start,
   };
 
