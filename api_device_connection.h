@@ -18,10 +18,10 @@ extern "C" {
 
 #include "parson.h"
 
-typedef struct DEVICE_CONNECTION_TAG {
+typedef struct DEVICE_CONNECTION_URL_TAG {
   char url[256];
   char device_id[30];
-} DeviceConnection;
+} DeviceConnectionUrl;
 
 esp_err_t api_device_connection_set_device_id(char *device_id);
 esp_err_t api_device_connection_set_url(char *url);
