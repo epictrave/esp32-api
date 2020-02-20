@@ -11,7 +11,7 @@ static const char *TAG = "api device connection";
 static char buffer[10240];
 static DeviceConnectionUrl device_connection_url;
 
-esp_err_t http_event_handler(esp_http_client_event_t *evt) {
+static esp_err_t http_event_handler(esp_http_client_event_t *evt) {
   switch (evt->event_id) {
   case HTTP_EVENT_ERROR:
     ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
@@ -45,24 +45,24 @@ esp_err_t http_event_handler(esp_http_client_event_t *evt) {
 
 esp_err_t api_device_connection_set_device_id(char *device_id) {
   if (device_id == NULL) {
-    ESP_LOGE(TAG, "Device connection device id can not be null.");
+    ESP_LOGE(TAG, "Device id can not be null.");
     return ESP_ERR_INVALID_ARG;
   }
   memset(device_connection_url.device_id, 0,
          sizeof(device_connection_url.device_id));
   strncpy(device_connection_url.device_id, device_id, strlen(device_id));
-  ESP_LOGI(TAG, "Device connection device id : %s.",
-           device_connection_url.device_id);
+  ESP_LOGI(TAG, "Device id : %s.", device_connection_url.device_id);
   return ESP_OK;
 }
+
 esp_err_t api_device_connection_set_url(char *url) {
   if (url == NULL) {
-    ESP_LOGE(TAG, "Device connection url can not be null.");
+    ESP_LOGE(TAG, "Url can not be null.");
     return ESP_ERR_INVALID_ARG;
   }
   memset(device_connection_url.url, 0, sizeof(device_connection_url.url));
   strncpy(device_connection_url.url, url, strlen(url));
-  ESP_LOGI(TAG, "Device connection url : %s.", device_connection_url.url);
+  ESP_LOGI(TAG, "Url : %s.", device_connection_url.url);
   return ESP_OK;
 }
 
