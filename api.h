@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 #include "api_device_connection.h"
+#include "api_water_level_outlet.h"
 
 #ifdef __cplusplus
 }
