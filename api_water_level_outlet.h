@@ -17,7 +17,9 @@ extern "C" {
 #include "esp_http_client.h"
 #include "esp_log.h"
 
+#include "api_common.h"
 #include "parson.h"
+#include "water_level_common.h"
 
 typedef struct WATER_LEVEL_OUTLET_URL_TAG {
   char url[256];
@@ -25,18 +27,19 @@ typedef struct WATER_LEVEL_OUTLET_URL_TAG {
 } WaterLevelOutletUrl;
 
 typedef struct WATER_LEVEL_OUTLET_DATA_TAG {
-  long id;
+  int id;
   char water_level_name[20];
   int level;
-  int state;
-  char outelt_device_id[20];
-  char outelt_name[20];
+  WaterLevelState state;
+  bool water_level_watch;
+  char outlet_device_id[20];
+  char outlet_name[20];
   bool power;
 } WaterLevelOutlet;
 
 esp_err_t api_water_level_outlet_set_device_id(char *device_id);
 esp_err_t api_water_level_outlet_set_url(char *url);
-char *api_water_level_outlet_get_data(void);
+WaterLevelOutlet *api_water_level_outlet_get_data(size_t *num);
 
 #ifdef __cplusplus
 }
