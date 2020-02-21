@@ -4,3 +4,6 @@
 [submodule "deps/global-root-ca"]
 	path = deps/global-root-ca
 	url = https://github.com/epictrave/global-root-ca.git
+[submodule "deps/esp32-waterlevel"]
+	path = deps/esp32-waterlevel
+	url = https://github.com/epictrave/esp32-waterlevel.git
