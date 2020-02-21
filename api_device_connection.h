@@ -16,6 +16,7 @@ extern "C" {
 #include "esp_http_client.h"
 #include "esp_log.h"
 
+#include "api_common.h"
 #include "parson.h"
 
 typedef struct DEVICE_CONNECTION_URL_TAG {

@@ -38,6 +38,9 @@ static esp_err_t http_event_handler(esp_http_client_event_t *evt) {
     break;
   case HTTP_EVENT_DISCONNECTED:
     ESP_LOGD(TAG, "HTTP_EVENT_DISCONNECTED");
+    if (evt->data) {
+      free(evt->data);
+    }
     break;
   }
   return ESP_OK;
@@ -67,6 +70,9 @@ esp_err_t api_device_connection_set_url(char *url) {
 }
 
 bool api_device_connection_get_connection(void) {
+  api_wait_connection();
+  api_connection_open();
+
   memset(buffer, 0, sizeof(buffer));
 
   if (device_connection_url.url == NULL ||
@@ -86,28 +92,27 @@ bool api_device_connection_get_connection(void) {
       .event_handler = http_event_handler,
       .cert_pem = ca_pem_start,
   };
-
   esp_http_client_handle_t client = esp_http_client_init(&config);
   esp_err_t err = esp_http_client_perform(client);
 
   if (err == ESP_OK) {
-    ESP_LOGI(TAG, "HTTPS Status = %d, content_length = %d\r\ndata = %s",
+    ESP_LOGI(TAG, "HTTPS Status = %d, content_length = %d",
              esp_http_client_get_status_code(client),
-             esp_http_client_get_content_length(client), buffer);
-    esp_http_client_cleanup(client);
+             esp_http_client_get_content_length(client));
 
     JSON_Value *root_value = json_parse_string(buffer);
     JSON_Object *root_object = json_value_get_object(root_value);
     if (json_object_get_value(root_object, "connection") != NULL) {
-      connection = (bool)json_object_get_boolean(root_object, "connection");
+      connection =
+          json_object_get_boolean(root_object, "connection") > 0 ? true : false;
     } else {
       connection = false;
     }
     json_value_free(root_value);
-    return connection;
   } else {
     ESP_LOGE(TAG, "Error perform http request %s", esp_err_to_name(err));
-    esp_http_client_cleanup(client);
-    return false;
   }
+  esp_http_client_cleanup(client);
+  api_connection_close();
+  return connection;
 }
