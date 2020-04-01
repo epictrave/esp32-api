@@ -1,11 +1,11 @@
 set(COMPONENT_SRCDIRS "."
+"deps"
 "deps/parson"
-"deps/esp32-waterlevel"
 )
 
 set(COMPONENT_ADD_INCLUDEDIRS "." 
+"deps"
 "deps/parson"
-"deps/esp32-waterlevel"
 )
 set(COMPONENT_EMBED_TXTFILES deps/global-root-ca/ca.pem)
 
